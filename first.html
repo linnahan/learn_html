@@ -5,39 +5,43 @@
         <title>第一first</title>
         <style>
             body{
+                cursor: url('./picture/black_small.ico')16 0,auto;
                 margin: 0;
             }
             .tab{
-                background-color: aqua;
                 width: 600px;
                 height: 400px;
                 margin: 20px auto;
             }
-            /* .tab:hover{
-                background-color: red
-            } */
             .col{
                 float: left;
                 margin: 0 ;
                 line-height: 50px;
                 height: 50px;
-                background-color: yellow;
                 font-size: 20px;
                 width: 25%;
                 text-align: center;
             }
-            .col1{
-                background-color: blue;
-            }
-            .col2{
-                background-color: red;
-            }
-            .col3{
-                background-color: green;
-            }
             .col:hover{
                 cursor: pointer;
                 color: white;
+            }
+            .pic{
+                width: 600px;
+                height: 400px;
+                transition: 200ms;
+            }
+            .col:hover ~ .pic{   
+                background-image: url('./picture/1.png');
+            }
+            .col1:hover ~ .pic{   
+                background-image: url('./picture/2.png');
+            }
+            .col2:hover ~ .pic{   
+                background-image: url('./picture/3.png');
+            }
+            .col3:hover ~ .pic{   
+                background-image: url('./picture/4.png');
             }
         </style>
         
@@ -48,7 +52,7 @@
             <h1 class="col col1">蓝色</h1>
             <h1 class="col col2">红色</h1>
             <h1 class="col col3">绿色</h1>
-            <span>hhh</span>
+            <div class="pic"></div>
         </div>
         <script>
             let box = document.getElementsByClassName("tab")[0];
