@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>第一first</title>
+        <style>
+            body{
+                margin: 0;
+            }
+            .tab{
+                background-color: aqua;
+                width: 600px;
+                height: 400px;
+                margin: 20px auto;
+            }
+            /* .tab:hover{
+                background-color: red
+            } */
+            .col{
+                float: left;
+                margin: 0 ;
+                line-height: 50px;
+                height: 50px;
+                background-color: yellow;
+                font-size: 20px;
+                width: 25%;
+                text-align: center;
+            }
+            .col1{
+                background-color: blue;
+            }
+            .col2{
+                background-color: red;
+            }
+            .col3{
+                background-color: green;
+            }
+            .col:hover{
+                cursor: pointer;
+                color: white;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <div class="tab">
+            <h1 class="col">黄色</h1>
+            <h1 class="col col1">蓝色</h1>
+            <h1 class="col col2">红色</h1>
+            <h1 class="col col3">绿色</h1>
+            <span>hhh</span>
+        </div>
+        <script>
+            let box = document.getElementsByClassName("tab")[0];
+            function colorran() {
+                let symbol = '0123456789ABCDE';
+                let color = '#';
+                for (let i = 0;i < 6;i ++) {
+                    color = color + symbol[Math.floor(Math.random()*16)];
+                }
+                return color;
+            }
+            box.addEventListener("mouseenter", function(){
+                box.style.backgroundColor = colorran();
+            })
+        </script>
+    </body>
+</html>
