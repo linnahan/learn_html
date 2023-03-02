@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+    .caidan {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .caidan .btn {
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid pink;
+      padding: 0 20px;
+      cursor: pointer;
+      border-radius: 20px;
+    }
+    .caidan #clear {
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid pink;
+      padding: 0 20px;
+      cursor: pointer;
+      border-radius: 20px;
+    }
+    .btn.active {
+      box-shadow: 0 0 20px deepskyblue;
+    }
+    #canvas {
+      width: 100%;
+      flex: 1;
+      border: 1px solid #ccc;
+      position: relative;
+    }
+    .line {
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid pink;
+      padding: 0 20px;
+      cursor: pointer;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+    .line.active {
+      box-shadow: 0 0 20px deepskyblue;
+    }
+    .xi:before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      display: block;
+      border-radius: 50%;
+      background: #000;
+    }
+    .normal:before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      display: block;
+      border-radius: 50%;
+      background: #000;
+    }
+    .cu::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      display: block;
+      border-radius: 50%;
+      background: #000;
+    }
+    .color {
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid pink;
+      padding: 0 20px;
+      cursor: pointer;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+    #download {
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid pink;
+      padding: 0 20px;
+      cursor: pointer;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+ 
+<body>
+  <div class="caidan">
+    <div class="btn active">画笔</div>
+    <div class="btn">矩形</div>
+    <div class="btn">圆形</div>
+    <div class="line xi active"></div>
+    <div class="line normal"></div>
+    <div class="line cu"></div>
+    <div class="color">
+      <input type="color" id="color">
+    </div>
+    <div id="clear">清空</div>
+    <div id="download">下载为图片</div>
+    <a href="" id="downloads" download></a>
+  </div>
+  <canvas id="canvas"></canvas>
+  <script>
+    /** @type {HTMLCanvasElement} */
+    let canvas = document.getElementById('canvas')
+    let ctx = canvas.getContext('2d')
+    let huabiBtn = document.getElementsByClassName('btn') // 形状
+    let lines = document.getElementsByClassName('line') // 粗细
+    let color = document.getElementById('color') // 颜色
+    let clear = document.getElementById('clear')
+    let download = document.getElementById('download')
+    canvas.setAttribute("width", canvas.offsetWidth)
+    canvas.setAttribute("height", canvas.offsetHeight)
+    // 清空画布
+    clear.onclick = () => {
+      clearhuaban()
+    }
+    function clearhuaban() {
+      let newimg = ctx.createImageData(canvas.offsetWidth, canvas.offsetHeight)
+      huaban.imgData = newimg
+      ctx.putImageData(huaban.imgData, 0, 0, 0, 0, canvas.offsetWidth, canvas.offsetHeight)
+    }
+    ctx.lineWidth = 4
+    // 定义画板类型
+    let huaban = {
+      type: 'huabi',
+      isDraw: false, // 是否开始绘画
+      beginX: 0, // 开始x轴路径
+      beginY: 0, // 开始的y轴路径
+      imgData: ctx.getImageData(0, 0, canvas.offsetWidth, canvas.offsetHeight), // 画板存档
+    }
+    // 粗细按钮
+    for (let i = 0; i < lines.length; i++) {
+      lines[i].onclick = () => {
+        switch (i) {
+          case 0:
+            ctx.lineWidth = 4
+            break
+          case 1:
+            ctx.lineWidth = 6
+            break
+          case 2: 
+            ctx.lineWidth = 12
+            break
+        }
+        for (let index = 0; index < huabiBtn.length; index++) {
+          lines[index].classList.remove("active")
+          lines[i].classList.add("active")
+        }
+      }
+    }
+    // 颜色切换
+    color.onchange = () => {
+      ctx.strokeStyle = color.value
+    }
+    // 切换画板类型
+    for (let i = 0; i < huabiBtn.length; i++) {
+      huabiBtn[i].onclick = () => {
+        changeHuabanType(i) // 切换画笔
+        for (let index = 0; index < huabiBtn.length; index++) {
+          huabiBtn[index].classList.remove("active")
+          huabiBtn[i].classList.add("active")
+        }
+      }
+    }
+    // 画板各类型功能
+    function changeHuabanType(i) {
+      switch (i) {
+        case 0:
+          huaban.type = "huabi" // 画笔
+          huaban.fn = e => {
+            let x = e.pageX - canvas.offsetLeft
+            let y = e.pageY - canvas.offsetTop
+            ctx.lineCap = "round";
+            ctx.lineTo(x, y);
+            ctx.stroke();
+          }
+          break;
+        case 1:
+          huaban.type = 'rect' // 矩形
+          huaban.fn = e => {
+            let x = e.pageX - canvas.offsetLeft
+            let y = e.pageY - canvas.offsetTop
+            ctx.putImageData(huaban.imgData, 0, 0, 0, 0, canvas.offsetWidth, canvas.offsetHeight)
+            ctx.beginPath()
+            ctx.rect(huaban.beginX, huaban.beginY, x-huaban.beginX, y-huaban.beginY)
+            ctx.stroke()
+            ctx.closePath()
+          }
+          break;
+        case 2:
+          huaban.type = 'round' // 圆形
+          huaban.fn = e => {
+            let x = e.pageX - canvas.offsetLeft
+            let y = e.pageY - canvas.offsetTop
+            ctx.putImageData(huaban.imgData, 0, 0, 0, 0, canvas.offsetWidth, canvas.offsetHeight)
+            ctx.beginPath()
+            ctx.arc(huaban.beginX, huaban.beginY, Math.sqrt(Math.pow(x-huaban.beginX, 2) + Math.pow(y-huaban.beginY,2)), 0, 2*Math.PI);
+            ctx.stroke();
+            ctx.stroke()
+            ctx.closePath()
+          }
+          break;
+      }
+    }
+    changeHuabanType(0)
+    // 绘画过程
+    canvas.onmousedown = e => {
+      huaban.isDraw = true
+      huaban.beginX = e.pageX - canvas.offsetLeft
+      huaban.beginY = e.pageY - canvas.offsetTop
+      // 画笔
+      if (huaban.type == 'huabi') {
+        ctx.beginPath()
+        ctx.moveTo(huaban.beginX, huaban.beginY);
+      }
+    }
+    canvas.onmousemove = e => {
+      if (huaban.isDraw) {
+        huaban.fn && huaban.fn(e)
+      }
+    }
+    // 鼠标抬起
+    canvas.onmouseup = () => {
+      huaban.isDraw = false
+      // 存档，矩形使用
+      huaban.imgData = ctx.getImageData(0, 0, canvas.offsetWidth, canvas.offsetHeight)
+    }
+    download.onclick = () => {
+      let imgUrl = canvas.toDataURL()
+      let downloads = document.getElementById('downloads')
+      downloads.setAttribute('href', imgUrl)
+      downloads.click()
+    }
+  </script>
+</body>
+ 
+</html>

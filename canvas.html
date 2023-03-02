@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>canvas~test</title>
+</head>
+<body>
+    <canvas id="helloworld" width="200" height="100" 
+    style="border:1px solid #ba4040;"></canvas>
+    <canvas id="jb" width="170" height="100" 
+    style="border:1px solid #ba4040;"></canvas>
+    <canvas id="heard" width="200" height="200"></canvas>
+    <script>
+        window.onload = function(){
+            // helloworld
+            var c=document.getElementById("helloworld");
+            var ctx=c.getContext("2d");
+            ctx.font="35px Arial";
+            ctx.strokeText("Hello World",10,60);
+
+            // 渐变
+            var c=document.getElementById("jb");
+            var ctx=c.getContext("2d");
+            // 创建渐变
+            var grd=ctx.createRadialGradient(75,50,5,90,60,100);
+            grd.addColorStop(0,"red");
+            grd.addColorStop(1,"white");
+            // 填充渐变
+            ctx.fillStyle=grd;
+            ctx.fillRect(10,10,150,80);
+
+            // 画爱心
+            var c = document.getElementById("heard");
+            var ctx = c.getContext("2d");
+            //设置初始弧度
+            let radian = 0;
+            //设置弧度增量，每次增加1°
+            let radian_add = Math.PI / 180;
+            //开始绘图
+            ctx.beginPath();
+            // 重新映射画布上的 (0,0) 位置
+            ctx.translate(100, 100);
+            // 设置绘制起点
+            ctx.moveTo(getX(radian), getY(radian));
+            // 弧度小于等于360°
+            while (radian <= Math.PI * 2) {
+                //每增加一次弧度，绘制一条线
+                radian += radian_add;
+                X = getX(radian);
+                Y = getY(radian);
+                ctx.lineTo(X, Y);
+            }
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+            }
+            //获取心型线的X坐标，放大15倍
+            function getX(t) {
+            return 5 * (12 * Math.sin(t) - 4 * Math.sin(3 * t));
+            }
+            //获取心型线的Y坐标，放大15倍
+            function getY(t) {
+            return (
+            -5 *(13 * Math.cos(t) - 5 * Math.cos(2 * t)
+                - 2 * Math.cos(3 * t) - Math.cos(4 * t))
+            );
+        }
+    </script>
+</body>
